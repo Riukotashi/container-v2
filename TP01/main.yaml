@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: nginx-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx1
+  labels:
+    app: nginx
+spec:
+  volumes:
+    - name: index1-configmap-volume
+      configMap:
+        name: index1
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+    volumeMounts:
+      - name: index1-configmap-volume
+        mountPath: /usr/share/nginx/html/
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx2
+  labels:
+    app: nginx
+spec:
+  volumes:
+    - name: index1-configmap-volume
+      configMap:
+        name: index2
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+    volumeMounts:
+      - name: index1-configmap-volume
+        mountPath: /usr/share/nginx/html
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx3
+  labels:
+    app: nginx
+spec:
+  volumes:
+    - name: index1-configmap-volume
+      configMap:
+        name: index3
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+    volumeMounts:
+      - name: index1-configmap-volume
+        mountPath: /usr/share/nginx/html

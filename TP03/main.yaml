@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: namespace1
+  labels:
+    name: namespace1
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: namespace2
+  labels:
+    name: namespace2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: namespace1
+  name: nginx1-namespace1
+  labels:
+    app: nginx1
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: namespace1
+  name: nginx2-namespace1
+  labels:
+    app: nginx2
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: namespace2
+  name: nginx-namespace2
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx1-svc-namespace1
+  namespace: namespace1
+  labels:
+    app: nginx1-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx1
+  type: LoadBalancer
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx2-svc-namespace1
+  namespace: namespace1
+  labels:
+    app: nginx2-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx2
+  type: LoadBalancer
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-namespace2
+  namespace: namespace2
+  labels:
+    app: nginx-svc
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+  type: LoadBalancer
