@@ -1,0 +1,7 @@
+numWorkers: 1
+
+monitoring:
+  enabled: false
+
+ha:
+  enabled: false
